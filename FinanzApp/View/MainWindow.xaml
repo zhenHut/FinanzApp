@@ -1,0 +1,230 @@
+﻿<Window x:Class="FinanzApp.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FinanzApp"
+        xmlns:convert="clr-namespace:FinanzApp.Converter"
+        mc:Ignorable="d"
+        Title="My Finance"
+        Background="LightSkyBlue"
+        Language="de-DE"
+        Height="800"
+        Width="1000">
+    <Window.Resources>
+        <convert:NegateAmountConverter x:Key="NegateAmountConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+
+        </Grid.RowDefinitions>
+
+        <!--#region Einnahmen -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Income"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Background="PaleGreen"
+                       TextAlignment="Center"
+                       Margin="5" />
+
+            <TextBlock Grid.Column="1"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Margin="5"
+                       Background="Green"
+                       Text="{ Binding IncomeSum, StringFormat='{}{0:C}'}" />
+        </Grid>
+
+        <ListBox ItemsSource="{Binding Incomes}"
+                 Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 Background="LightBlue"
+                 VerticalContentAlignment="Stretch">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   Margin="5"
+                                   FontSize="20"
+                                   HorizontalAlignment="Left"
+                                   DockPanel.Dock="Left" />
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                                   Margin="5"
+                                   FontSize="20"
+                                   TextAlignment="Right"
+                                   HorizontalAlignment="Right"
+                                   DockPanel.Dock="Right" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+        </ListBox>
+        <!--#endregion-->
+
+        <!--#region Ausgaben -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Expense"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Background="PaleVioletRed"
+                       TextAlignment="Center"
+                       Margin="5"/>
+
+            <TextBlock Grid.Column="1"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Background="MediumVioletRed"
+                       Text="{ Binding ExpenseSum, StringFormat='{}{0:C}'}"
+                       HorizontalAlignment="Right" 
+                       Margin="5"/>
+        </Grid>
+
+        <ListBox ItemsSource="{Binding Expenses}"
+                 Grid.Row="3"
+                 Grid.ColumnSpan="2"
+                 Background="LightBlue"
+                 HorizontalAlignment="Stretch">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   Margin="5"
+                                   FontSize="20"
+                                   HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Amount, StringFormat='{}{0:C}',Converter={StaticResource NegateAmountConverter}}"
+                                   Margin="15 5 5 5"
+                                   FontSize="20"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+        </ListBox>
+
+        <!--#endregion-->
+
+        <!--#region Bilanz -->
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Bilanz"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Background="PaleGoldenrod"
+                       TextAlignment="Center" 
+                       Margin="5"/>
+
+            <TextBlock Grid.Column="1"
+                       FontWeight="DemiBold"
+                       FontSize="26"
+                       Background="DarkGoldenrod"
+                       Text="{ Binding BilanceSum, StringFormat='{}{0:C}'}"
+                       Margin="5"/>
+
+
+        </Grid>
+
+        <Grid Grid.Row="5"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Grid.Row="0"
+                       Text="Einnahmen"
+                       Margin="15"
+                       FontSize="20"
+                       HorizontalAlignment="Left"
+                       Foreground="ForestGreen"/>
+
+            <TextBlock Grid.Column="1"
+                       Grid.Row="0"
+                       Text="{Binding IncomeSum, StringFormat='{}{0:C}'}"
+                       Margin="15"
+                       FontSize="20"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right" />
+
+            <TextBlock Grid.Column="0"
+                       Grid.Row="1"
+                       Text="Ausgaben"
+                       Margin="15"
+                       FontSize="20"
+                       HorizontalAlignment="Left" 
+                       Foreground="IndianRed"/>
+
+            <TextBlock Grid.Column="1"
+                       Grid.Row="1"
+                       Text="{Binding ExpenseSum, StringFormat='{}{0:C}',Converter={StaticResource NegateAmountConverter}}"
+                       Margin="15"
+                       FontSize="20"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right" />
+        </Grid>
+
+        <!--#endregion-->
+    </Grid>
+</Window>
