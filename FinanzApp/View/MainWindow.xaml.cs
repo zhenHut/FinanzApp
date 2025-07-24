@@ -1,5 +1,4 @@
-﻿using FinanzApp.core.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 
 namespace FinanzApp.View
 {
@@ -11,7 +10,6 @@ namespace FinanzApp.View
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

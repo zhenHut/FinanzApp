@@ -1,15 +1,10 @@
 ﻿using FinanzApp.core.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace FinanzApp.core.Model
 {
     public class Transaction
     {
+        public int Id { get; set; }
         public decimal BudgetAmount { get; set; }
         public decimal Amount { get; set; }
 
