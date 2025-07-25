@@ -15,6 +15,7 @@ namespace FinanzApp.View
             Loaded += EventloadingNotifyRequest;
             
             var version = Assembly.GetExecutingAssembly().GetName().Version;
+            this.Title = $"FinanzApp v{version?.ToString(3)}";
         }
 
         private void EventloadingNotifyRequest(object sender, EventArgs e)
