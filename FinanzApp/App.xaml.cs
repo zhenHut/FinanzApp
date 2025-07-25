@@ -1,4 +1,5 @@
-﻿using FinanzApp.core.Interface;
+﻿using FinanzApp.core.Data;
+using FinanzApp.core.Interface;
 using FinanzApp.core.Services;
 using FinanzApp.core.ViewModel;
 using FinanzApp.View;
@@ -28,7 +29,9 @@ namespace FinanzApp
 
 
             IDialogService navigationService = new DialogService();
-            var mainViewModel = new MainViewModel(navigationService);
+            FinanzAppDbContext finanzAppDbContext = new FinanzAppDbContext();
+            ITransactionService transactionService = new TransactionServices(finanzAppDbContext);
+            var mainViewModel = new MainViewModel(transactionService ,navigationService);
 
             var mainWindow = new MainWindow
             {

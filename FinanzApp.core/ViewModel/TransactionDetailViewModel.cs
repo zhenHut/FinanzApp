@@ -32,7 +32,6 @@ namespace FinanzApp.core.ViewModel
 
         #region Events
         
-       
         public event EventHandler<DialogCloseRequestedEventArgs>? CloseRequested;
         #endregion
 

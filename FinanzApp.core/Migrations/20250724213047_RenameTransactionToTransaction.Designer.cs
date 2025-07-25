@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanzApp.core.Migrations
 {
     [DbContext(typeof(FinanzAppDbContext))]
-    [Migration("20250723145300_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250724213047_RenameTransactionToTransaction")]
+    partial class RenameTransactionToTransaction
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,18 +29,16 @@ namespace FinanzApp.core.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("BudgetAmount")
+                    b.Property<decimal?>("BudgetAmount")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -52,7 +50,7 @@ namespace FinanzApp.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction");
                 });
 #pragma warning restore 612, 618
         }

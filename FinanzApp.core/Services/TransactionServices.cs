@@ -27,7 +27,7 @@ namespace FinanzApp.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeletAsync(Transaction transaction)
+        public async Task DeleteAsync(Transaction transaction)
         {
             _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();
