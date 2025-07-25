@@ -1,4 +1,5 @@
 ﻿using FinanzApp.core.Interface;
+using System.Reflection;
 using System.Windows;
 
 namespace FinanzApp.View
@@ -11,17 +12,23 @@ namespace FinanzApp.View
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += (s, e) =>
-            {
+            Loaded += EventloadingNotifyRequest;
+            
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+        }
 
-                if (DataContext is INotificationRequest notifier)
-                {
-                    notifier.NotificationRequested += (s, msg) =>
-                    {
-                        MessageBox.Show(msg, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                    };
-                }
-            };
+        private void EventloadingNotifyRequest(object sender, EventArgs e)
+        {
+            if (DataContext is INotificationRequest notifier)
+            {
+                notifier.NotificationRequested += OnMessageSending;
+            }
+        }
+
+        private  void OnMessageSending(object? sender, string msg)
+        {
+                MessageBox.Show(msg, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+   
         }
     }
 }
