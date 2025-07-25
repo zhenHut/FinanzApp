@@ -14,10 +14,4 @@
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="update.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
