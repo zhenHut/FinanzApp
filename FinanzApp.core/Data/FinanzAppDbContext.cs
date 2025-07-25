@@ -16,7 +16,8 @@ namespace FinanzApp.core.Data
             try
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "finanzapp.db");
-                optionsBuilder.UseSqlite($"Data Source={path}");
+                var connectionString = $"Data Source={path}; Password=Z2n54lsü2!q";
+                optionsBuilder.UseSqlite(connectionString);
             }
             catch (Exception ex)
             {

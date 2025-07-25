@@ -1,10 +1,10 @@
-﻿using FinanzApp.core.Data;
+﻿using AutoUpdaterDotNET;
+using FinanzApp.core.Data;
 using FinanzApp.core.Interface;
 using FinanzApp.core.Services;
 using FinanzApp.core.ViewModel;
 using FinanzApp.View;
-using System.Configuration;
-using System.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Windows;
 
 
@@ -19,6 +19,8 @@ namespace FinanzApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            SQLitePCL.Batteries_V2.Init();
+            AutoUpdater.Start("https://github.com/zhenHut/FinanzAppUpdates/blob/main/update.xml");
 
             var appResources = new ResourceDictionary
             {
@@ -30,8 +32,10 @@ namespace FinanzApp
 
             IDialogService navigationService = new DialogService();
             FinanzAppDbContext finanzAppDbContext = new FinanzAppDbContext();
+            finanzAppDbContext.Database.Migrate();
             ITransactionService transactionService = new TransactionServices(finanzAppDbContext);
-            var mainViewModel = new MainViewModel(transactionService ,navigationService);
+            
+            var mainViewModel = new MainViewModel(transactionService, navigationService);
 
             var mainWindow = new MainWindow
             {

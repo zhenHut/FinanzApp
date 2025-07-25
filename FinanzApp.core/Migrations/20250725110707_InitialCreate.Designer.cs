@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanzApp.core.Migrations
 {
     [DbContext(typeof(FinanzAppDbContext))]
-    [Migration("20250724213047_RenameTransactionToTransaction")]
-    partial class RenameTransactionToTransaction
+    [Migration("20250725110707_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -5,7 +5,6 @@ using FinanzApp.core.Interface;
 using FinanzApp.core.Model;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace FinanzApp.core.ViewModel
 {
