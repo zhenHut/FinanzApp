@@ -20,7 +20,6 @@ namespace FinanzApp
         {
             base.OnStartup(e);
             SQLitePCL.Batteries_V2.Init();
-            AutoUpdater.Start("https://zhenhut.github.io/FinanzAppUpdates/update.xml");
 
             var appResources = new ResourceDictionary
             {
@@ -43,6 +42,7 @@ namespace FinanzApp
             };
 
             mainWindow.Show();
+            AutoUpdater.Start("https://zhenhut.github.io/FinanzAppUpdates/update.xml");
         }
     }
 
