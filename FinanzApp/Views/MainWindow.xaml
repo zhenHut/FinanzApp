@@ -65,7 +65,7 @@
             </StackPanel>
 
             <TextBlock Grid.Column="1"
-                       Text="Income"
+                       Text="Einnahmen"
                        FontWeight="DemiBold"
                        FontSize="26"
                        Background="PaleGreen"
@@ -163,7 +163,7 @@
             </StackPanel>
 
             <TextBlock Grid.Column="1"
-                       Text="Expense"
+                       Text="Ausgaben"
                        FontWeight="DemiBold"
                        FontSize="26"
                        Background="PaleVioletRed"
