@@ -11,8 +11,6 @@ namespace FinanzApp.View
         public MainWindow()
         {
             InitializeComponent();
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            this.Title = $"FinanzApp v{version?.ToString(3)}";
         }
     }
 }

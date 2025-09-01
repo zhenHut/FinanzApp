@@ -11,8 +11,11 @@ using FinanzApp.View;
 using FinanzApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
+using FinanzApp.Metadata;
 
 
 namespace FinanzApp
@@ -76,12 +79,16 @@ namespace FinanzApp
             {
                 var ctx = scope.ServiceProvider.GetRequiredService<FinanzAppDbContext>();
                 ctx.Database.Migrate();
-            } 
+            }
 
+            AutoUpdater.AppTitle = AppInfo.Product;
+            AutoUpdater.InstalledVersion = AppInfo.SemVerVersion;
+            
             AutoUpdater.Start("https://zhenhut.github.io/FinanzAppUpdates/update.xml");
 
             var mainWindow = Services.GetRequiredService<MainWindow>();
-            MainWindow = mainWindow;         
+            mainWindow.Title = $"{AutoUpdater.AppTitle}";
+            MainWindow = mainWindow; 
             mainWindow.Show();
         }
 
@@ -106,6 +113,20 @@ namespace FinanzApp
                 }
             });
         }
+
+        //static string GetProductVersionString()
+        //{
+        //    // Bevorzugt die InformationalVersion (entspricht <Version>)
+        //    var info = Assembly.GetExecutingAssembly()
+        //        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        //    if (!string.IsNullOrWhiteSpace(info))
+        //        return info.Split('+')[0].Split('-')[0]; // z.B. "1.3.0"
+
+        //    // Fallback: FileVersion
+        //    return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion ?? "1.0.0.0";
+        //}
+
+        //static Version GetProductVersion() => Version.Parse(GetProductVersionString());
     }
 
 }

@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanzApp"
-        xmlns:core="clr-namespace:FinanzApp.core.Models;assembly=FinanzApp.core" 
+        xmlns:core="clr-namespace:FinanzApp.core.Models;assembly=FinanzApp.core"
+        xmlns:info="clr-namespace:FinanzApp.Metadata"
         xmlns:convert="clr-namespace:FinanzApp.Converters"
         mc:Ignorable="d"
         Title="My Finance"
@@ -22,81 +23,87 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--#region Einnahmen -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="0"
-                        Orientation="Horizontal">
+            <!--#region Einnahmen -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <Button Content="➕"
-                        ToolTip="Neuen Eintrag hinzufügen"
-                        Style="{StaticResource HoverButton}"
-                        Command="{Binding AddTransactionCommand}"
-                        CommandParameter="{x:Static  core:TransactionType.Income}" />
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal">
 
-                <Button Content="✏️"
-                        ToolTip="Ausgewählten Eintrag ändern"
-                        Style="{StaticResource HoverButton}"
-                        Command="{Binding EditTransactionCommand}"
-                        CommandParameter="{Binding SelectedIncome}" />
+                    <Button Content="➕"
+                            ToolTip="Neuen Eintrag hinzufügen"
+                            Style="{StaticResource HoverButton}"
+                            Command="{Binding AddTransactionCommand}"
+                            CommandParameter="{x:Static  core:TransactionType.Income}" />
 
-                <Button Content="❌"
-                        ToolTip="Ausgewählten Eintrag löschen"
-                        Style="{StaticResource HoverButton}"
-                        Command="{Binding DeleteTransactionCommand}"
-                        CommandParameter="{Binding SelectedIncome}"
-                        Background="red" />
+                    <Button Content="✏️"
+                            ToolTip="Ausgewählten Eintrag ändern"
+                            Style="{StaticResource HoverButton}"
+                            Command="{Binding EditTransactionCommand}"
+                            CommandParameter="{Binding SelectedIncome}" />
+
+                    <Button Content="❌"
+                            ToolTip="Ausgewählten Eintrag löschen"
+                            Style="{StaticResource HoverButton}"
+                            Command="{Binding DeleteTransactionCommand}"
+                            CommandParameter="{Binding SelectedIncome}"
+                            Background="red" />
 
 
-            </StackPanel>
+                </StackPanel>
 
-            <TextBlock Grid.Column="1"
-                       Text="Einnahmen"
-                       FontWeight="DemiBold"
-                       FontSize="26"
-                       Background="PaleGreen"
-                       TextAlignment="Center"
-                       Padding="5"
-                       Margin="10 5" />
+                <TextBlock Grid.Column="1"
+                           Text="Einnahmen"
+                           FontWeight="DemiBold"
+                           FontSize="26"
+                           Background="PaleGreen"
+                           TextAlignment="Center"
+                           Padding="5"
+                           Margin="10 5" />
 
-            <TextBlock Grid.Column="2"
-                       FontWeight="DemiBold"
-                       TextAlignment="Right"
-                       FontSize="26"
-                       Width="200"
-                       Margin="10 5"
-                       Padding="5"
-                       Background="LightSeaGreen"
-                       Text="{ Binding IncomeSum, StringFormat='{}{0:C}'}" />
-        </Grid>
+                <TextBlock Grid.Column="2"
+                           FontWeight="DemiBold"
+                           TextAlignment="Right"
+                           FontSize="26"
+                           Width="200"
+                           Margin="10 5"
+                           Padding="5"
+                           Background="LightSeaGreen"
+                           Text="{ Binding IncomeSum, StringFormat='{}{0:C}'}" />
+            </Grid>
 
-        <ListBox ItemsSource="{Binding IncomesView}"
-                 ItemTemplate="{StaticResource FinanceRowTemplate}"
-                 SelectedItem="{Binding SelectedIncome}"
-                 Grid.Row="2"
-                 Grid.ColumnSpan="2"
-                 Background="LightBlue"
-                 VerticalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding IncomesView}"
+                     ItemTemplate="{StaticResource FinanceRowTemplate}"
+                     SelectedItem="{Binding SelectedIncome}"
+                     Grid.Row="2"
+                     Grid.ColumnSpan="2"
+                     Background="LightBlue"
+                     VerticalContentAlignment="Stretch">
 
-            <ListBox.GroupStyle>
-                <StaticResource ResourceKey="CategoryGroupStyle" />
-            </ListBox.GroupStyle>
+                <ListBox.GroupStyle>
+                    <StaticResource ResourceKey="CategoryGroupStyle" />
+                </ListBox.GroupStyle>
 
-            <!--<ListBox.ItemTemplate>
+                <!--<ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -126,75 +133,75 @@
                 </Style>
             </ListBox.ItemContainerStyle>-->
 
-        </ListBox>
-        <!--#endregion-->
+            </ListBox>
+            <!--#endregion-->
 
-        <!--#region Ausgaben -->
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <!--#region Ausgaben -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
 
-            <StackPanel Grid.Column="0"
-                        Orientation="Horizontal">
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal">
 
-                <Button Content="➕"
-                        ToolTip="Neuen Eintrag hinzufügen"
-                        Style="{StaticResource HoverButton}"
-                        CommandParameter="{x:Static  core:TransactionType.Expense}"
-                        Command="{Binding AddTransactionCommand}" />
+                    <Button Content="➕"
+                            ToolTip="Neuen Eintrag hinzufügen"
+                            Style="{StaticResource HoverButton}"
+                            CommandParameter="{x:Static  core:TransactionType.Expense}"
+                            Command="{Binding AddTransactionCommand}" />
 
-                <Button Content="✏️"
-                        ToolTip="Ausgewählten Eintrag ändern"
-                        Style="{StaticResource HoverButton}"
-                        Command="{Binding EditTransactionCommand}"
-                        CommandParameter="{Binding SelectedExpense}" />
+                    <Button Content="✏️"
+                            ToolTip="Ausgewählten Eintrag ändern"
+                            Style="{StaticResource HoverButton}"
+                            Command="{Binding EditTransactionCommand}"
+                            CommandParameter="{Binding SelectedExpense}" />
 
-                <Button Content="❌"
-                        ToolTip="Ausgewählten Eintrag löschen"
-                        Style="{StaticResource HoverButton}"
-                        Command="{Binding DeleteTransactionCommand}"
-                        CommandParameter="{Binding SelectedExpense}"
-                        Background="red" />
+                    <Button Content="❌"
+                            ToolTip="Ausgewählten Eintrag löschen"
+                            Style="{StaticResource HoverButton}"
+                            Command="{Binding DeleteTransactionCommand}"
+                            CommandParameter="{Binding SelectedExpense}"
+                            Background="red" />
 
-            </StackPanel>
+                </StackPanel>
 
-            <TextBlock Grid.Column="1"
-                       Text="Ausgaben"
-                       FontWeight="DemiBold"
-                       FontSize="26"
-                       Background="PaleVioletRed"
-                       TextAlignment="Center"
-                       Padding="5"
-                       Margin="10 5" />
+                <TextBlock Grid.Column="1"
+                           Text="Ausgaben"
+                           FontWeight="DemiBold"
+                           FontSize="26"
+                           Background="PaleVioletRed"
+                           TextAlignment="Center"
+                           Padding="5"
+                           Margin="10 5" />
 
-            <TextBlock Grid.Column="2"
-                       FontWeight="DemiBold"
-                       FontSize="26"
-                       Width="200"
-                       TextAlignment="Right"
-                       Background="#FFC75D3E"
-                       Text="{ Binding ExpenseSum, StringFormat='{}{0:C}' ,Converter={StaticResource NegateAmountConverter}}"
-                       Margin="10 5"
-                       Padding="5" />
-        </Grid>
+                <TextBlock Grid.Column="2"
+                           FontWeight="DemiBold"
+                           FontSize="26"
+                           Width="200"
+                           TextAlignment="Right"
+                           Background="#FFC75D3E"
+                           Text="{ Binding ExpenseSum, StringFormat='{}{0:C}' ,Converter={StaticResource NegateAmountConverter}}"
+                           Margin="10 5"
+                           Padding="5" />
+            </Grid>
 
-        <ListBox ItemsSource="{Binding ExpensesView}"
-                 ItemTemplate="{StaticResource FinanceRowTemplate}"
-                 SelectedItem="{Binding SelectedExpense}"
-                 Grid.Row="4"
-                 Grid.ColumnSpan="2"
-                 Background="LightBlue"
-                 HorizontalAlignment="Stretch">
+            <ListBox ItemsSource="{Binding ExpensesView}"
+                     ItemTemplate="{StaticResource FinanceRowTemplate}"
+                     SelectedItem="{Binding SelectedExpense}"
+                     Grid.Row="4"
+                     Grid.ColumnSpan="2"
+                     Background="LightBlue"
+                     HorizontalAlignment="Stretch">
 
-            <ListBox.GroupStyle>
-                <StaticResource ResourceKey="CategoryGroupStyle" />
-            </ListBox.GroupStyle>
+                <ListBox.GroupStyle>
+                    <StaticResource ResourceKey="CategoryGroupStyle" />
+                </ListBox.GroupStyle>
 
-            <!--<ListBox.ItemTemplate>
+                <!--<ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -224,88 +231,116 @@
                 </Style>
             </ListBox.ItemContainerStyle>-->
 
-        </ListBox>
+            </ListBox>
 
-        <!--#endregion-->
+            <!--#endregion-->
 
-        <!--#region Bilanz -->
+            <!--#region Bilanz -->
 
-        <Grid Grid.Row="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Text="Bilanz"
-                       FontWeight="DemiBold"
-                       FontSize="26"
-                       Background="PaleGoldenrod"
-                       TextAlignment="Center"
-                       Margin="10 5"
-                       Padding="5" />
+                <TextBlock Grid.Column="0"
+                           Text="Bilanz"
+                           FontWeight="DemiBold"
+                           FontSize="26"
+                           Background="PaleGoldenrod"
+                           TextAlignment="Center"
+                           Margin="10 5"
+                           Padding="5" />
 
-            <TextBlock Grid.Column="1"
-                       FontWeight="DemiBold"
-                       FontSize="26"
-                       Width="200"
-                       TextAlignment="Right"
-                       Background="DarkGoldenrod"
-                       Text="{ Binding BilanceSum, StringFormat='{}{0:C}'}"
-                       Margin="10 5"
-                       Padding="5" />
+                <TextBlock Grid.Column="1"
+                           FontWeight="DemiBold"
+                           FontSize="26"
+                           Width="200"
+                           TextAlignment="Right"
+                           Background="DarkGoldenrod"
+                           Text="{ Binding BilanceSum, StringFormat='{}{0:C}'}"
+                           Margin="10 5"
+                           Padding="5" />
 
+            </Grid>
+
+            <Grid Grid.Row="6"
+                  Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Grid.Row="0"
+                           Text="Einnahmen"
+                           Margin="15"
+                           FontSize="20"
+                           HorizontalAlignment="Left"
+                           Foreground="ForestGreen"
+                           FontWeight="DemiBold" />
+
+                <TextBlock Grid.Column="1"
+                           Grid.Row="0"
+                           Text="{Binding IncomeSum, StringFormat='{}{0:C}'}"
+                           Margin="15"
+                           FontSize="20"
+                           HorizontalAlignment="Right"
+                           TextAlignment="Right"
+                           FontWeight="Bold" />
+
+                <TextBlock Grid.Column="0"
+                           Grid.Row="1"
+                           Text="Ausgaben"
+                           Margin="15"
+                           FontSize="20"
+                           HorizontalAlignment="Left"
+                           Foreground="IndianRed"
+                           FontWeight="DemiBold" />
+
+                <TextBlock Grid.Column="1"
+                           Grid.Row="1"
+                           Text="{Binding ExpenseSum, StringFormat='{}{0:C}',Converter={StaticResource NegateAmountConverter}}"
+                           Margin="15"
+                           FontSize="20"
+                           HorizontalAlignment="Right"
+                           TextAlignment="Right"
+                           FontWeight="Bold" />
+            </Grid>
+
+            <!--#endregion-->
         </Grid>
 
-        <Grid Grid.Row="6"
-              Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <!--#region footer-->
+        <Border Grid.Row="1"
+                Background="#FFF4F4F4"
+                BorderBrush="#FFDDDDDD"
+                BorderThickness="1,1,0,0">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Grid.Row="0"
-                       Text="Einnahmen"
-                       Margin="15"
-                       FontSize="20"
-                       HorizontalAlignment="Left"
-                       Foreground="ForestGreen"
-                       FontWeight="DemiBold" />
+                <TextBlock Grid.Column="0"
+                           HorizontalAlignment="Stretch"
+                           Text="{x:Static info:AppInfo.ProductWithVersion}" />
 
-            <TextBlock Grid.Column="1"
-                       Grid.Row="0"
-                       Text="{Binding IncomeSum, StringFormat='{}{0:C}'}"
-                       Margin="15"
-                       FontSize="20"
-                       HorizontalAlignment="Right"
-                       TextAlignment="Right"
-                       FontWeight="Bold" />
+                <TextBlock Grid.Column="2"
+                           HorizontalAlignment="Stretch"
+                           Text="{x:Static info:AppInfo.Copyright}" />
+            </Grid>
 
-            <TextBlock Grid.Column="0"
-                       Grid.Row="1"
-                       Text="Ausgaben"
-                       Margin="15"
-                       FontSize="20"
-                       HorizontalAlignment="Left"
-                       Foreground="IndianRed"
-                       FontWeight="DemiBold" />
 
-            <TextBlock Grid.Column="1"
-                       Grid.Row="1"
-                       Text="{Binding ExpenseSum, StringFormat='{}{0:C}',Converter={StaticResource NegateAmountConverter}}"
-                       Margin="15"
-                       FontSize="20"
-                       HorizontalAlignment="Right"
-                       TextAlignment="Right"
-                       FontWeight="Bold" />
-        </Grid>
+        </Border>
 
         <!--#endregion-->
     </Grid>
+
 </Window>
