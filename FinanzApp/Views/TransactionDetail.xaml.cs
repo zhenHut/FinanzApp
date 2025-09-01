@@ -1,7 +1,7 @@
 ﻿using FinanzApp.core.Infrastructure;
-using FinanzApp.core.Interface;
-using FinanzApp.core.Model;
-using FinanzApp.core.ViewModel;
+using FinanzApp.core.Interfaces;
+using FinanzApp.core.Models;
+using FinanzApp.ViewModels;
 using System.Windows;
 
 namespace FinanzApp.View

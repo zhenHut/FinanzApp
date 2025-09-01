@@ -6,12 +6,18 @@
         xmlns:local="clr-namespace:FinanzApp.View"
         xmlns:enums="clr-namespace:FinanzApp.core.Infrastructure;assembly=FinanzApp.core"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:convert="clr-namespace:FinanzApp.Converters"
         mc:Ignorable="d"
         Background="LightBlue"
         Title="Transaktion Details"
         Height="450"
         Width="800"
+        Language="de-DE"
         WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <convert:DecimalInputConverter x:Key="DecimalInputConverter" />
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -74,7 +80,7 @@
                 <!--Amount-->
                 <TextBlock FontSize="16"
                            Text="Amount" />
-                <TextBox Text="{Binding Transaction.Amount, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding Transaction.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalInputConverter}}"
                          HorizontalAlignment="Left"
                          Height="30"
                          Width="250"
@@ -95,7 +101,7 @@
                 <!--Budget Amount-->
                 <TextBlock FontSize="16"
                            Text="Budget Amount" />
-                <TextBox Text="{Binding Transaction.BudgetAmount, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding Transaction.BudgetAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalInputConverter} }"
                          HorizontalAlignment="Left"
                          Height="30"
                          Width="250"

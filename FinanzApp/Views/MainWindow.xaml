@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanzApp"
-        xmlns:core="clr-namespace:FinanzApp.core.Infrastructure;assembly=FinanzApp.core"
-        xmlns:convert="clr-namespace:FinanzApp.Converter"
+        xmlns:core="clr-namespace:FinanzApp.core.Models;assembly=FinanzApp.core" 
+        xmlns:convert="clr-namespace:FinanzApp.Converters"
         mc:Ignorable="d"
         Title="My Finance"
         Background="LightBlue"
@@ -84,14 +84,19 @@
                        Text="{ Binding IncomeSum, StringFormat='{}{0:C}'}" />
         </Grid>
 
-        <ListBox ItemsSource="{Binding Incomes}"
+        <ListBox ItemsSource="{Binding IncomesView}"
+                 ItemTemplate="{StaticResource FinanceRowTemplate}"
                  SelectedItem="{Binding SelectedIncome}"
                  Grid.Row="2"
                  Grid.ColumnSpan="2"
                  Background="LightBlue"
                  VerticalContentAlignment="Stretch">
 
-            <ListBox.ItemTemplate>
+            <ListBox.GroupStyle>
+                <StaticResource ResourceKey="CategoryGroupStyle" />
+            </ListBox.GroupStyle>
+
+            <!--<ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -119,7 +124,7 @@
                     <Setter Property="HorizontalContentAlignment"
                             Value="Stretch" />
                 </Style>
-            </ListBox.ItemContainerStyle>
+            </ListBox.ItemContainerStyle>-->
 
         </ListBox>
         <!--#endregion-->
@@ -177,14 +182,19 @@
                        Padding="5" />
         </Grid>
 
-        <ListBox ItemsSource="{Binding Expenses}"
+        <ListBox ItemsSource="{Binding ExpensesView}"
+                 ItemTemplate="{StaticResource FinanceRowTemplate}"
                  SelectedItem="{Binding SelectedExpense}"
                  Grid.Row="4"
                  Grid.ColumnSpan="2"
                  Background="LightBlue"
                  HorizontalAlignment="Stretch">
 
-            <ListBox.ItemTemplate>
+            <ListBox.GroupStyle>
+                <StaticResource ResourceKey="CategoryGroupStyle" />
+            </ListBox.GroupStyle>
+
+            <!--<ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -212,7 +222,7 @@
                     <Setter Property="HorizontalContentAlignment"
                             Value="Stretch" />
                 </Style>
-            </ListBox.ItemContainerStyle>
+            </ListBox.ItemContainerStyle>-->
 
         </ListBox>
 

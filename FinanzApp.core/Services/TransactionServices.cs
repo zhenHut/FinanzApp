@@ -1,6 +1,6 @@
-﻿using FinanzApp.core.Data;
-using FinanzApp.core.Interface;
-using FinanzApp.core.Model;
+﻿using FinanzApp.core.Infrastructure;
+using FinanzApp.core.Interfaces;
+using FinanzApp.core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanzApp.core.Services
@@ -10,43 +10,43 @@ namespace FinanzApp.core.Services
         #region Constructor
         public TransactionServices(FinanzAppDbContext context) 
         {
-            _context = context;
+            _dbcontext = context;
         }
 
         #endregion
 
         #region Fields
-        private readonly FinanzAppDbContext _context;
+        private readonly FinanzAppDbContext _dbcontext;
 
         #endregion
 
         #region Methods
         public async Task AddAsync(Transaction transaction)
         {
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+            _dbcontext.Transactions.Add(transaction);
+            await _dbcontext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Transaction transaction)
         {
-            _context.Transactions.Remove(transaction);
-            await _context.SaveChangesAsync();
+            _dbcontext.Transactions.Remove(transaction);
+            await _dbcontext.SaveChangesAsync();
         }
 
         public async Task<List<Transaction>> GetAllAsync()
         {
-            return await _context.Transactions.ToListAsync();
+            return await _dbcontext.Transactions.ToListAsync();
         }
 
         public async Task<Transaction?> GetByIdAsync(int id)
         {
-            return await _context.Transactions.FindAsync(id);
+            return await _dbcontext.Transactions.FindAsync(id);
         }
 
         public async Task UpdateAsync(Transaction transaction)
         {
-            _context.Transactions.Update(transaction);
-            await _context.SaveChangesAsync();
+            _dbcontext.Transactions.Update(transaction);
+            await _dbcontext.SaveChangesAsync();
         }
 
         #endregion

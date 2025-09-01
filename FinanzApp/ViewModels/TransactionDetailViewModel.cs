@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinanzApp.core.Infrastructure;
-using FinanzApp.core.Interface;
-using FinanzApp.core.Model;
+using FinanzApp.core.Interfaces;
+using FinanzApp.core.Models;
 
 
 
-namespace FinanzApp.core.ViewModel
+namespace FinanzApp.ViewModels
 {
     public partial class TransactionDetailViewModel :ObservableObject, IDialogRequestClose
     {

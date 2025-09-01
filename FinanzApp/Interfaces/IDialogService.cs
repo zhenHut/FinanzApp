@@ -1,8 +1,7 @@
-﻿using FinanzApp.core.Infrastructure;
-using FinanzApp.core.Model;
+﻿using FinanzApp.core.Models;
 
 
-namespace FinanzApp.core.Interface
+namespace FinanzApp.core.Interfaces
 {
     public interface IDialogService
     {

@@ -1,6 +1,6 @@
 ﻿using FinanzApp.core.Infrastructure;
 
-namespace FinanzApp.core.Interface
+namespace FinanzApp.core.Interfaces
 {
     public interface IDialogRequestClose
     {

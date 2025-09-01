@@ -1,7 +1,6 @@
-﻿using FinanzApp.core.Infrastructure;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanzApp.core.Model
+namespace FinanzApp.core.Models
 {
     [Table("Transaction")]
     public class Transaction

@@ -1,8 +1,7 @@
-﻿using FinanzApp.core.Infrastructure;
-using FinanzApp.core.Interface;
+﻿using FinanzApp.core.Interfaces;
 using FinanzApp.View;
 
-using FinanzApp.core.Model;
+using FinanzApp.core.Models;
 
 namespace FinanzApp.core.Services
 {

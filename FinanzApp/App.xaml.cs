@@ -1,10 +1,17 @@
 ﻿using AutoUpdaterDotNET;
-using FinanzApp.core.Data;
-using FinanzApp.core.Interface;
+using FinanzApp.core.Infrastructure;
+using FinanzApp.core.Interfaces;
+using FinanzApp.core.Notifications;
 using FinanzApp.core.Services;
-using FinanzApp.core.ViewModel;
+using FinanzApp.Events;
+using FinanzApp.Interfaces;
+using FinanzApp.Security;
+using FinanzApp.Services;
 using FinanzApp.View;
+using FinanzApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using System.Windows;
 
 
@@ -16,10 +23,13 @@ namespace FinanzApp
     public partial class App : Application
     {
 
+        public static IServiceProvider Services { get; private set; } = null!;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             SQLitePCL.Batteries_V2.Init();
+            
 
             var appResources = new ResourceDictionary
             {
@@ -27,22 +37,74 @@ namespace FinanzApp
             };
 
             Resources.MergedDictionaries.Add(appResources);
+            SecretStore.EnsureDbPassword();
 
-
-            IDialogService navigationService = new DialogService();
-            FinanzAppDbContext finanzAppDbContext = new FinanzAppDbContext();
-            finanzAppDbContext.Database.Migrate();
-            ITransactionService transactionService = new TransactionServices(finanzAppDbContext);
-            
-            var mainViewModel = new MainViewModel(transactionService, navigationService);
-
-            var mainWindow = new MainWindow
+            if(!SecretStore.TryLoad(out var pw))
             {
-                DataContext = mainViewModel,
-            };
+                MessageBox.Show("Kein DB-Passwort gefunden.","FinanzApp",MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown(-1);
+                return;
+            }
 
-            mainWindow.Show();
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var dbDir = Path.Combine(appData, "FinanzApp");
+            Directory.CreateDirectory(dbDir);
+            var dbPath = Path.Combine(dbDir, "finanzapp.db");
+            var cs = $"Data Source={dbPath}; Password={pw}";
+
+
+            var services = new ServiceCollection();
+            services.AddDbContext<FinanzAppDbContext>(options
+                => options.UseSqlite(cs, builder => builder.MigrationsAssembly(typeof(FinanzAppDbContext).Assembly.GetName().Name)));
+            
+            services.AddScoped<ITransactionService, TransactionServices>();
+            services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<IDialogService, DialogService>();
+            services.AddTransient<MainViewModel>();
+            services.AddTransient<MainWindow>(sp => new MainWindow
+            {
+                DataContext = sp.GetRequiredService<MainViewModel>()
+            });
+
+
+            Services = services.BuildServiceProvider();
+
+            var notifier = Services.GetRequiredService<INotificationService>();
+            notifier.Notified += HandleNotification;
+
+            using (var scope = Services.CreateScope())
+            {
+                var ctx = scope.ServiceProvider.GetRequiredService<FinanzAppDbContext>();
+                ctx.Database.Migrate();
+            } 
+
             AutoUpdater.Start("https://zhenhut.github.io/FinanzAppUpdates/update.xml");
+
+            var mainWindow = Services.GetRequiredService<MainWindow>();
+            MainWindow = mainWindow;         
+            mainWindow.Show();
+        }
+
+        private void HandleNotification (object? sender, NotificationEventArgs e)
+        {
+            var notification = e.Notification;
+            Dispatcher.Invoke(() =>
+            {
+                switch (notification.Kind)
+                {
+                    case NotificationKind.Error:
+                        MessageBox.Show(notification.Message, notification.Title ?? "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+
+                    case NotificationKind.Warning:
+                        MessageBox.Show(notification.Message, notification.Title ?? "Hinweis", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        break;
+
+                    default:
+                        //TODO: Statusbar/Snackbar
+                        break;
+                }
+            });
         }
     }
 

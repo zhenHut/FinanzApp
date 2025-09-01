@@ -1,4 +1,4 @@
-﻿namespace FinanzApp.core.Infrastructure
+﻿namespace FinanzApp.core.Models
 {
     public enum TransactionType
     {

@@ -1,34 +1,51 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinanzApp.core.Infrastructure;
-using FinanzApp.core.Interface;
-using FinanzApp.core.Model;
+using FinanzApp.core.Interfaces;
+using FinanzApp.core.Models;
+using FinanzApp.Interfaces;
+using FinanzApp.Services;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Data;
 
-namespace FinanzApp.core.ViewModel
+
+namespace FinanzApp.ViewModels
 {
-    public partial class MainViewModel : ObservableObject, INotificationRequest
+    public partial class MainViewModel : ObservableObject
     {
         #region Constructor
 
-        public MainViewModel(ITransactionService transactionService, IDialogService dialogService)
+        public MainViewModel(ITransactionService transactionService, IDialogService dialogService, INotificationService notificationService)
         {
-
             _dialogService = dialogService;
             _transactionService = transactionService;
-            Transactions = new();
-            RefreshTransactionsCommand.Execute(null);
+            _notification = notificationService;
+            Transactions = new ObservableCollection<Transaction>();
+
+            var cvsIncome = new CollectionViewSource { Source = Transactions };
+            IncomesView = cvsIncome.View;
+            IncomesView.Filter = o =>((Transaction)o).TransactionType == TransactionType.Income;
+            cvsIncome.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Transaction.Category)));
 
 
+            var cvsExpense = new CollectionViewSource { Source = Transactions };
+            ExpensesView = cvsExpense.View;
+            ExpensesView.Filter = o => ((Transaction)o).TransactionType == TransactionType.Expense;
+            cvsExpense.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Transaction.Category)));
+
+
+            _ = RefreshTransactionsAsync();
+            //RefreshTransactionsCommand.Execute(null);
         }
 
         #endregion
 
         #region Fields
 
-        private IDialogService _dialogService;
-        private ITransactionService _transactionService;
+        private readonly IDialogService _dialogService;
+        private readonly ITransactionService _transactionService;
+        private readonly INotificationService _notification;
 
         [ObservableProperty]
         private Transaction? _selectedIncome;
@@ -38,25 +55,14 @@ namespace FinanzApp.core.ViewModel
 
         #endregion
 
-        #region Events
-
-        public event EventHandler<string>? NotificationRequested;
-
-        #endregion
-
         #region Properties
         public ObservableCollection<Transaction> Transactions { get; set; }
 
         public IEnumerable<Transaction> Incomes => Transactions.Where
             (t => t.TransactionType == TransactionType.Income);
 
-
-
-
         public IEnumerable<Transaction> Expenses => Transactions.Where
             (t => t.TransactionType == TransactionType.Expense);
-
-
 
         public decimal IncomeSum => Transactions?
                 .Where(t => t.TransactionType == TransactionType.Income)
@@ -68,7 +74,8 @@ namespace FinanzApp.core.ViewModel
 
         public decimal BilanceSum => IncomeSum - ExpenseSum;
 
-
+        public ICollectionView IncomesView { get; }
+        public ICollectionView ExpensesView { get; }
 
         #endregion
 
@@ -88,8 +95,8 @@ namespace FinanzApp.core.ViewModel
                 catch (Exception ex)
                 {
                     var fullmessage = ex.InnerException?.Message ?? ex.Message;
-                    Notify($"Fehler beim hinzufügen der Transaktion: {fullmessage}");
-                    Notify($"SQL-Fehler:\n{ex.GetBaseException().Message}");
+                    _notification.Error($"Fehler beim hinzufügen der Transaktion: {fullmessage}");
+                    _notification.Error($"SQL-Fehler:\n{ex.GetBaseException().Message}");
                     Debug.WriteLine(ex.ToString()); // für vollständige Trace in der Ausgabe
                 }
             }
@@ -109,7 +116,7 @@ namespace FinanzApp.core.ViewModel
             catch (Exception ex)
             {
                 var fullmessage = ex.InnerException?.Message ?? ex.Message;
-                Notify($"Fehler beim löschen der Transaktion: {fullmessage}");
+                _notification.Error($"Fehler beim löschen der Transaktion: {fullmessage}");
             }
         }
 
@@ -139,7 +146,7 @@ namespace FinanzApp.core.ViewModel
                 catch (Exception ex)
                 {
                     var fullmessage = ex.InnerException?.Message ?? ex.Message;
-                    Notify($"Fehler beim Aktualisieren der Transaktion: {fullmessage}");
+                    _notification.Error($"Fehler beim Aktualisieren der Transaktion: {fullmessage}");
                 }
             }
         }
@@ -170,14 +177,11 @@ namespace FinanzApp.core.ViewModel
             catch (Exception ex)
             {
                 var fullmessage = ex.InnerException?.Message ?? ex.Message;
-                Notify($"Fehler beim Laden der Transaktion: {fullmessage}");
+                _notification.Error($"Fehler beim Laden der Transaktion: {fullmessage}");
             }
-        }
 
-
-        private void Notify(string message)
-        {
-            NotificationRequested?.Invoke(this, message);
+            IncomesView.Refresh();
+            ExpensesView.Refresh();
         }
 
         private Transaction CloneTransaction(Transaction originalTransaction)
@@ -193,6 +197,7 @@ namespace FinanzApp.core.ViewModel
                 TransactionType = originalTransaction.TransactionType,
             };
         }
+
         #endregion
     }
 }

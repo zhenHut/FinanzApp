@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace FinanzApp.Converter
+namespace FinanzApp.Converters
 {
     public class NegateAmountConverter : IValueConverter
 
