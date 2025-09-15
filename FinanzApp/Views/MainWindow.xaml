@@ -99,6 +99,13 @@
                      Background="LightBlue"
                      VerticalContentAlignment="Stretch">
 
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
                 <ListBox.GroupStyle>
                     <StaticResource ResourceKey="CategoryGroupStyle" />
                 </ListBox.GroupStyle>
@@ -196,6 +203,12 @@
                      Grid.ColumnSpan="2"
                      Background="LightBlue"
                      HorizontalAlignment="Stretch">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
 
                 <ListBox.GroupStyle>
                     <StaticResource ResourceKey="CategoryGroupStyle" />

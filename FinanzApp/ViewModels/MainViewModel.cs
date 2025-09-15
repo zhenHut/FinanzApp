@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinanzApp.Converters;
 using FinanzApp.core.Interfaces;
 using FinanzApp.core.Models;
 using FinanzApp.Interfaces;
@@ -26,17 +27,17 @@ namespace FinanzApp.ViewModels
             var cvsIncome = new CollectionViewSource { Source = Transactions };
             IncomesView = cvsIncome.View;
             IncomesView.Filter = o =>((Transaction)o).TransactionType == TransactionType.Income;
-            cvsIncome.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Transaction.Category)));
+            cvsIncome.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name",new NullToLabelConverter()));
 
 
             var cvsExpense = new CollectionViewSource { Source = Transactions };
             ExpensesView = cvsExpense.View;
             ExpensesView.Filter = o => ((Transaction)o).TransactionType == TransactionType.Expense;
-            cvsExpense.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Transaction.Category)));
+            cvsExpense.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name", new NullToLabelConverter()));
 
 
             _ = RefreshTransactionsAsync();
-            //RefreshTransactionsCommand.Execute(null);
+           
         }
 
         #endregion

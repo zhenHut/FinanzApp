@@ -51,22 +51,28 @@
             <!--Date-->
             <TextBlock FontSize="16"
                        Text="Date" />
-            <TextBox Text="{Binding Transaction.Date, UpdateSourceTrigger=PropertyChanged}"
-                     HorizontalAlignment="Left"
-                     Height="30"
-                     Width="250"
-                     Margin="0 5 0 15" 
-                     FontSize="16"/>
-
-            <!--Category-->
-            <TextBlock FontSize="16"
-                       Text="Category" />
-            <TextBox Text="{Binding Transaction.Category, UpdateSourceTrigger=PropertyChanged}"
+            <DatePicker Text="{Binding Transaction.Date, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalAlignment="Left"
                      Height="30"
                      Width="250"
                      Margin="0 5 0 15"
                      FontSize="16" />
+
+            <!--Category-->
+            <TextBlock FontSize="16"
+                       Text="Category" />
+            <ComboBox Text="{Binding NewCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Categories}"
+                      SelectedValue="{Binding Transaction.CategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Id"
+                      DisplayMemberPath="Name"
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"
+                      HorizontalAlignment="Left"
+                      Height="30"
+                      Width="250"
+                      Margin="0 5 0 15"
+                      FontSize="16" />
 
         </StackPanel>
 
@@ -80,12 +86,13 @@
                 <!--Amount-->
                 <TextBlock FontSize="16"
                            Text="Amount" />
-                <TextBox Text="{Binding Transaction.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalInputConverter}}"
+                <TextBox Text="{Binding Transaction.Amount, UpdateSourceTrigger=LostFocus}"
                          HorizontalAlignment="Left"
                          Height="30"
                          Width="250"
                          Margin="0 5 0 15"
-                         FontSize="16"/>
+                         FontSize="16"
+                          />
 
                 <!--Amount-Type-->
                 <TextBlock FontSize="16"
@@ -101,12 +108,13 @@
                 <!--Budget Amount-->
                 <TextBlock FontSize="16"
                            Text="Budget Amount" />
-                <TextBox Text="{Binding Transaction.BudgetAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalInputConverter} }"
+                <TextBox Text="{Binding Transaction.BudgetAmount, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat='{}{0:C}'}"
                          HorizontalAlignment="Left"
                          Height="30"
                          Width="250"
                          Margin="0 5 0 15"
-                         FontSize="16"/>
+                         FontSize="16"
+                         />
             </StackPanel>
 
             <StackPanel Grid.Row="1"
@@ -119,7 +127,7 @@
                         Width="150"
                         Height="50"
                         Margin="30"
-                        Command="{Binding SaveCommand}" />
+                        Command="{Binding SaveTransactionCommand}" />
 
                 <Button Grid.Column="1"
                         Grid.Row="1"

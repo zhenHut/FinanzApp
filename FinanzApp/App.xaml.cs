@@ -5,17 +5,17 @@ using FinanzApp.core.Notifications;
 using FinanzApp.core.Services;
 using FinanzApp.Events;
 using FinanzApp.Interfaces;
+using FinanzApp.Metadata;
 using FinanzApp.Security;
 using FinanzApp.Services;
 using FinanzApp.View;
 using FinanzApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Windows;
-using FinanzApp.Metadata;
+using System.Windows.Markup;
 
 
 namespace FinanzApp
@@ -32,7 +32,7 @@ namespace FinanzApp
         {
             base.OnStartup(e);
             SQLitePCL.Batteries_V2.Init();
-            
+
 
             var appResources = new ResourceDictionary
             {
@@ -40,11 +40,20 @@ namespace FinanzApp
             };
 
             Resources.MergedDictionaries.Add(appResources);
+
+            var culture = CultureInfo.GetCultureInfo("de-DE");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                typeof(FrameworkElement),
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+
+
             SecretStore.EnsureDbPassword();
 
-            if(!SecretStore.TryLoad(out var pw))
+            if (!SecretStore.TryLoad(out var pw))
             {
-                MessageBox.Show("Kein DB-Passwort gefunden.","FinanzApp",MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Kein DB-Passwort gefunden.", "FinanzApp", MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown(-1);
                 return;
             }
@@ -59,10 +68,11 @@ namespace FinanzApp
             var services = new ServiceCollection();
             services.AddDbContext<FinanzAppDbContext>(options
                 => options.UseSqlite(cs, builder => builder.MigrationsAssembly(typeof(FinanzAppDbContext).Assembly.GetName().Name)));
-            
+
             services.AddScoped<ITransactionService, TransactionServices>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainWindow>(sp => new MainWindow
             {
@@ -83,16 +93,16 @@ namespace FinanzApp
 
             AutoUpdater.AppTitle = AppInfo.Product;
             AutoUpdater.InstalledVersion = AppInfo.SemVerVersion;
-            
+
             AutoUpdater.Start("https://zhenhut.github.io/FinanzAppUpdates/update.xml");
 
             var mainWindow = Services.GetRequiredService<MainWindow>();
             mainWindow.Title = $"{AutoUpdater.AppTitle}";
-            MainWindow = mainWindow; 
+            MainWindow = mainWindow;
             mainWindow.Show();
         }
 
-        private void HandleNotification (object? sender, NotificationEventArgs e)
+        private void HandleNotification(object? sender, NotificationEventArgs e)
         {
             var notification = e.Notification;
             Dispatcher.Invoke(() =>

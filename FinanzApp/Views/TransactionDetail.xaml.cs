@@ -40,6 +40,9 @@ namespace FinanzApp.View
             Close();
         }
 
+
         #endregion
+
+       
     }
 }

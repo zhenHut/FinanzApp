@@ -17,7 +17,8 @@ namespace FinanzApp.core.Models
 
         public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-        public string? Category { get; set; } = string.Empty;
+        public int? CategoryId { get; set; }
 
+        public Category? Category { get; set; }
     }
 }
