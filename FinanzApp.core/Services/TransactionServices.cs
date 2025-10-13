@@ -48,7 +48,14 @@ namespace FinanzApp.core.Services
 
         public async Task UpdateAsync(Transaction transaction)
         {
-            _dbcontext.Transactions.Update(transaction);
+            var transactionObject = await _dbcontext.Transactions.FindAsync(transaction.Id)
+                ?? throw new KeyNotFoundException($"Transaction {transaction.Id} nicht gefunden.");
+
+            _dbcontext.Entry(transactionObject).CurrentValues.SetValues(transaction);
+
+            transactionObject.CategoryId = transaction.CategoryId;
+            transactionObject.Category = null;
+            //_dbcontext.Transactions.Update(transaction);
             await _dbcontext.SaveChangesAsync();
         }
 

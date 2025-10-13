@@ -4,12 +4,10 @@ using FinanzApp.Converters;
 using FinanzApp.core.Interfaces;
 using FinanzApp.core.Models;
 using FinanzApp.Interfaces;
-using FinanzApp.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Data;
-using System.Windows.Xps;
 
 
 namespace FinanzApp.ViewModels
@@ -135,11 +133,11 @@ namespace FinanzApp.ViewModels
 
                 try
                 {
-                    var oldType = transaction.TransactionType;
+                    //var oldType = transaction.TransactionType;
                     transaction.Name = result.Name;
                     transaction.Description = result.Description;
                     transaction.Date = result.Date;
-                    transaction.Category = result.Category;
+                    transaction.Category = null;
                     transaction.CategoryId = result.CategoryId;
                     transaction.Amount = result.Amount;
                     transaction.BudgetAmount = result.BudgetAmount;
@@ -148,17 +146,17 @@ namespace FinanzApp.ViewModels
 
                     await _transactionService.UpdateAsync(transaction);
 
-                if (oldType == TransactionType.Income)
-                    Incomes.Remove(transaction);
+                //if (oldType == TransactionType.Income)
+                //    Incomes.Remove(transaction);
 
-                if(oldType == TransactionType.Expense)
-                    Expenses.Remove(transaction);
+                //if(oldType == TransactionType.Expense)
+                //    Expenses.Remove(transaction);
 
-                if (transaction.TransactionType == TransactionType.Income) 
-                    Incomes.Add(transaction);
+                //if (transaction.TransactionType == TransactionType.Income) 
+                //    Incomes.Add(transaction);
 
-                if (transaction.TransactionType == TransactionType.Expense)
-                    Expenses.Add(transaction);
+                //if (transaction.TransactionType == TransactionType.Expense)
+                //    Expenses.Add(transaction);
 
                 await RefreshTransactionsAsync();
                 }

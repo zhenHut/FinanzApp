@@ -58,10 +58,19 @@ namespace FinanzApp
                 return;
             }
 
+#if DEBUG
+            var appDirName = "FinanzApp-Dev";
+            var dbFileName = "finanzapp.dev.db";
+#else
+            var appDirName = "FinanzApp";
+            var dbFileName = "finanzapp.db";
+#endif
+
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var dbDir = Path.Combine(appData, "FinanzApp");
+
+            var dbDir = Path.Combine(appData, appDirName);
             Directory.CreateDirectory(dbDir);
-            var dbPath = Path.Combine(dbDir, "finanzapp.db");
+            var dbPath = Path.Combine(dbDir, dbFileName);
             var cs = $"Data Source={dbPath}; Password={pw}";
 
 
