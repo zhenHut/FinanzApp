@@ -109,11 +109,11 @@ namespace FinanzApp
             {
                 switch (notification.Kind)
                 {
-                    case NotificationKind.Error:
+                    case NotificationType.Error:
                         MessageBox.Show(notification.Message, notification.Title ?? "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
 
-                    case NotificationKind.Warning:
+                    case NotificationType.Warning:
                         MessageBox.Show(notification.Message, notification.Title ?? "Hinweis", MessageBoxButton.OK, MessageBoxImage.Warning);
                         break;
 

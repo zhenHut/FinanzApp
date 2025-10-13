@@ -214,6 +214,7 @@ namespace FinanzApp.ViewModels
         {
             return new Transaction
             {
+                Id = originalTransaction.Id,
                 Name = originalTransaction.Name,
                 Description = originalTransaction.Description,
                 Date = originalTransaction.Date,

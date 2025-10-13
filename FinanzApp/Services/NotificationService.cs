@@ -16,22 +16,22 @@ namespace FinanzApp.Services
 
         public void Info(string message, string? title = null)
         {
-            RaiseNotification(NotificationKind.Info, message, title);
+            RaiseNotification(NotificationType.Info, message, title);
         }
 
         public void Success(string message, string? title = null)
         {
-            RaiseNotification(NotificationKind.Success, message, title);
+            RaiseNotification(NotificationType.Success, message, title);
         }
 
         public void Warning(string message, string? title = null)
         {
-            RaiseNotification(NotificationKind.Warning, message, title);
+            RaiseNotification(NotificationType.Warning, message, title);
         }
 
         public void Error(string message, string? title = null)
         {
-            RaiseNotification(NotificationKind.Error, message, title);
+            RaiseNotification(NotificationType.Error, message, title);
         }
 
         public void Error(Exception ex, string? title = null)
@@ -39,7 +39,7 @@ namespace FinanzApp.Services
             Error(ex.InnerException?.Message ?? ex.Message, title);
         }
 
-        private void RaiseNotification(NotificationKind kind, string message, string ? title = null, Exception ? exception= null )
+        private void RaiseNotification(NotificationType kind, string message, string ? title = null, Exception ? exception= null )
             => Notified?.Invoke(this, new NotificationEventArgs(new Notification(kind,message,title,exception)));
 
         #endregion
