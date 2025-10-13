@@ -5,6 +5,7 @@ using FinanzApp.core.Interfaces;
 using FinanzApp.core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 
 
@@ -46,10 +47,39 @@ namespace FinanzApp.ViewModels
         #region Methods
 
         [RelayCommand]
-        private void SaveTransaction()
+        private async Task SaveTransactionAsync()
         {
+            // Name aus der ComboBox
+            var name = (NewCategoryName ?? string.Empty).Trim();
+
+            // nur wenn nichts ausgewählt ist (keine FK) und ein Name eingegeben wurde
+            if (Transaction.CategoryId is null && !string.IsNullOrWhiteSpace(name))
+            {
+                // existiert die Kategorie bereits?
+                var existing = Categories.FirstOrDefault(c =>
+                    string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
+
+                if (existing is null)
+                {
+                    // neu anlegen
+                    var created = await _categoryService.AddSync(new Category { Name = name });
+                    Categories.Add(created);
+                    Transaction.CategoryId = created.Id;   // FK setzen
+                }
+                else
+                {
+                    // vorhandene zuordnen
+                    Transaction.CategoryId = existing.Id;
+                }
+
+                // wichtig: Navigation leeren, damit kein Cross-DbContext-Problem entsteht
+                Transaction.Category = null;
+            }
+
+            // Dialog schließen
             CloseRequested?.Invoke(this, new DialogCloseRequestedEventArgs(true));
         }
+        
 
         [RelayCommand]
         private void Cancel()
@@ -67,19 +97,22 @@ namespace FinanzApp.ViewModels
             }
         }
 
-        [RelayCommand]
-        private async Task SaveAsync()
-        {
-            var name = (NewCategoryName ?? string .Empty).Trim();
+        //[RelayCommand]
+        //private async Task SaveAsync()
+        //{
+        //    var name = (NewCategoryName ?? string.Empty).Trim();
 
-            if (string.IsNullOrWhiteSpace(name)) return;
-            if (Categories.Any(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase))) return;
+        //    if (string.IsNullOrWhiteSpace(name))
+        //        return;
 
-            var created = await _categoryService.AddAsync(new Category { Name = name });
-            Categories.Add(created);
-            Transaction.CategoryId = created.Id;
-            Transaction.Category = created;
-        }
+        //    if (Categories.Any(c => string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase)))
+        //        return;
+
+        //    var created = await _categoryService.AddSync(new Category { Name = name });
+        //    Categories.Add(created);
+        //    Transaction.CategoryId = created.Id;
+        //    Transaction.Category = created;
+        //}
 
         #endregion
     }

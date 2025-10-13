@@ -35,7 +35,10 @@ namespace FinanzApp.core.Services
 
         public async Task<List<Transaction>> GetAllAsync()
         {
-            return await _dbcontext.Transactions.ToListAsync();
+            return await _dbcontext.Transactions
+                .Include(t => t.Category)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Transaction?> GetByIdAsync(int id)

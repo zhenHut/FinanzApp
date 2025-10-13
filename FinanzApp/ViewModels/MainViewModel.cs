@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Data;
+using System.Windows.Xps;
 
 
 namespace FinanzApp.ViewModels
@@ -24,20 +25,18 @@ namespace FinanzApp.ViewModels
             _notification = notificationService;
             Transactions = new ObservableCollection<Transaction>();
 
-            var cvsIncome = new CollectionViewSource { Source = Transactions };
+            var cvsIncome = new CollectionViewSource { Source = Incomes };
             IncomesView = cvsIncome.View;
-            IncomesView.Filter = o =>((Transaction)o).TransactionType == TransactionType.Income;
-            cvsIncome.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name",new NullToLabelConverter()));
+            cvsIncome.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name", new NullToLabelConverter()));
 
 
-            var cvsExpense = new CollectionViewSource { Source = Transactions };
+            var cvsExpense = new CollectionViewSource { Source = Expenses };
             ExpensesView = cvsExpense.View;
-            ExpensesView.Filter = o => ((Transaction)o).TransactionType == TransactionType.Expense;
             cvsExpense.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name", new NullToLabelConverter()));
 
 
             _ = RefreshTransactionsAsync();
-           
+
         }
 
         #endregion
@@ -57,26 +56,19 @@ namespace FinanzApp.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<Transaction> Transactions { get; set; }
-
-        public IEnumerable<Transaction> Incomes => Transactions.Where
-            (t => t.TransactionType == TransactionType.Income);
-
-        public IEnumerable<Transaction> Expenses => Transactions.Where
-            (t => t.TransactionType == TransactionType.Expense);
-
-        public decimal IncomeSum => Transactions?
-                .Where(t => t.TransactionType == TransactionType.Income)
-                .Sum(t => t.Amount) ?? 0;
-
-        public decimal ExpenseSum => (Transactions?
-            .Where(t => t.TransactionType == TransactionType.Expense)
-            .Sum(t => t.Amount)) ?? 0;
-
-        public decimal BilanceSum => IncomeSum - ExpenseSum;
+        public ObservableCollection<Transaction> Transactions { get; } = new();
+        public ObservableCollection<Transaction> Incomes { get; } = new();
+        public ObservableCollection<Transaction> Expenses { get; } = new();
 
         public ICollectionView IncomesView { get; }
         public ICollectionView ExpensesView { get; }
+
+
+        public decimal IncomeSum => Incomes.Sum(t => t.Amount);
+        public decimal ExpenseSum => Expenses.Sum(t => t.Amount);
+
+
+        public decimal BilanceSum => IncomeSum - ExpenseSum;
 
         #endregion
 
@@ -86,20 +78,28 @@ namespace FinanzApp.ViewModels
         private async Task AddTransactionAsync(TransactionType transactionType)
         {
             var result = _dialogService.ShowTransactionDialog(null, transactionType);
-            if (result != null)
+            if (result is null)
+                return;
+
+            try
             {
-                try
-                {
-                    await _transactionService.AddAsync(result);
-                    await RefreshTransactionsAsync();
-                }
-                catch (Exception ex)
-                {
-                    var fullmessage = ex.InnerException?.Message ?? ex.Message;
-                    _notification.Error($"Fehler beim hinzufügen der Transaktion: {fullmessage}");
-                    _notification.Error($"SQL-Fehler:\n{ex.GetBaseException().Message}");
-                    Debug.WriteLine(ex.ToString()); // für vollständige Trace in der Ausgabe
-                }
+                await _transactionService.AddAsync(result);
+                Transactions.Add(result);
+
+                if (result.TransactionType == TransactionType.Income)
+                    Incomes.Add(result);
+
+                if (result.TransactionType == TransactionType.Expense)
+                    Expenses.Add(result);
+
+                await RefreshTransactionsAsync();
+            }
+            catch (Exception ex)
+            {
+                var fullmessage = ex.InnerException?.Message ?? ex.Message;
+                _notification.Error($"Fehler beim hinzufügen der Transaktion: {fullmessage}");
+                _notification.Error($"SQL-Fehler:\n{ex.GetBaseException().Message}");
+                Debug.WriteLine(ex.ToString()); // für vollständige Trace in der Ausgabe
             }
         }
 
@@ -130,27 +130,45 @@ namespace FinanzApp.ViewModels
             var copyTransaction = CloneTransaction(transaction);
             var result = _dialogService.ShowTransactionDialog(copyTransaction);
 
-            if (result != null)
-            {
-                transaction.Name = result.Name;
-                transaction.Description = result.Description;
-                transaction.Date = result.Date;
-                transaction.Category = result.Category;
-                transaction.Amount = result.Amount;
-                transaction.BudgetAmount = result.BudgetAmount;
-                transaction.TransactionType = result.TransactionType;
+            if (result is null)
+                return;
+
                 try
                 {
+                    var oldType = transaction.TransactionType;
+                    transaction.Name = result.Name;
+                    transaction.Description = result.Description;
+                    transaction.Date = result.Date;
+                    transaction.Category = result.Category;
+                    transaction.CategoryId = result.CategoryId;
+                    transaction.Amount = result.Amount;
+                    transaction.BudgetAmount = result.BudgetAmount;
+                    transaction.TransactionType = result.TransactionType;
+
+
                     await _transactionService.UpdateAsync(transaction);
-                    await RefreshTransactionsAsync();
+
+                if (oldType == TransactionType.Income)
+                    Incomes.Remove(transaction);
+
+                if(oldType == TransactionType.Expense)
+                    Expenses.Remove(transaction);
+
+                if (transaction.TransactionType == TransactionType.Income) 
+                    Incomes.Add(transaction);
+
+                if (transaction.TransactionType == TransactionType.Expense)
+                    Expenses.Add(transaction);
+
+                await RefreshTransactionsAsync();
                 }
                 catch (Exception ex)
                 {
                     var fullmessage = ex.InnerException?.Message ?? ex.Message;
                     _notification.Error($"Fehler beim Aktualisieren der Transaktion: {fullmessage}");
                 }
-            }
         }
+        
 
         private bool CanExecuteTransactionCommands(Transaction transaction)
         {
@@ -162,27 +180,34 @@ namespace FinanzApp.ViewModels
         private async Task RefreshTransactionsAsync()
         {
             Transactions.Clear();
+            Incomes.Clear();
+            Expenses.Clear();
+
             try
             {
                 var loadedTransactions = await _transactionService.GetAllAsync();
 
                 foreach (var transaction in loadedTransactions)
+                {
                     Transactions.Add(transaction);
+                    if (transaction.TransactionType == TransactionType.Income) Incomes.Add(transaction);
+                    if (transaction.TransactionType == TransactionType.Expense) Expenses.Add(transaction);
+                }
 
                 OnPropertyChanged(nameof(Expenses));
                 OnPropertyChanged(nameof(Incomes));
                 OnPropertyChanged(nameof(IncomeSum));
                 OnPropertyChanged(nameof(ExpenseSum));
                 OnPropertyChanged(nameof(BilanceSum));
+
+                IncomesView.Refresh();
+                ExpensesView.Refresh();
             }
             catch (Exception ex)
             {
                 var fullmessage = ex.InnerException?.Message ?? ex.Message;
                 _notification.Error($"Fehler beim Laden der Transaktion: {fullmessage}");
             }
-
-            IncomesView.Refresh();
-            ExpensesView.Refresh();
         }
 
         private Transaction CloneTransaction(Transaction originalTransaction)
@@ -196,6 +221,7 @@ namespace FinanzApp.ViewModels
                 Amount = originalTransaction.Amount,
                 BudgetAmount = originalTransaction.BudgetAmount,
                 TransactionType = originalTransaction.TransactionType,
+                CategoryId = originalTransaction.CategoryId,
             };
         }
 

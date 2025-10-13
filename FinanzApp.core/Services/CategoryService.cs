@@ -34,7 +34,7 @@ namespace FinanzApp.core.Services
             return await _context.Categories.AsNoTracking().OrderBy(c => c.Name).ToListAsync();
         }
 
-        public async Task<Category> AddAsync(Category category)
+        public async Task<Category> AddSync(Category category)
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();

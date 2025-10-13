@@ -1,12 +1,7 @@
 ﻿using FinanzApp.core.Models;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections;
+using System.Globalization;
+using System.Reflection;
 using System.Windows.Data;
 
 namespace FinanzApp.Converters

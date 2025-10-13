@@ -88,7 +88,7 @@
                            Margin="10 5"
                            Padding="5"
                            Background="LightSeaGreen"
-                           Text="{ Binding IncomeSum, StringFormat='{}{0:C}'}" />
+                           Text="{Binding IncomeSum, StringFormat='{}{0:C}'}" />
             </Grid>
 
             <ListBox ItemsSource="{Binding IncomesView}"
@@ -103,6 +103,8 @@
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment"
                                 Value="Stretch" />
+                        <EventSetter Event="MouseDoubleClick"
+                                     Handler="ListBox_MouseDoubleClick" />
                     </Style>
                 </ListBox.ItemContainerStyle>
 
@@ -199,6 +201,7 @@
             <ListBox ItemsSource="{Binding ExpensesView}"
                      ItemTemplate="{StaticResource FinanceRowTemplate}"
                      SelectedItem="{Binding SelectedExpense}"
+                     
                      Grid.Row="4"
                      Grid.ColumnSpan="2"
                      Background="LightBlue"
@@ -207,6 +210,8 @@
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment"
                                 Value="Stretch" />
+                        <EventSetter Event="MouseDoubleClick"
+                                     Handler="ListBox_MouseDoubleClick" />
                     </Style>
                 </ListBox.ItemContainerStyle>
 
