@@ -40,6 +40,13 @@
                                 <Setter Property="Foreground"
                                         Value="IndianRed" />
                             </DataTrigger>
+
+                            <DataTrigger Binding="{Binding TransactionType}"
+                                         Value="{x:Static core:TransactionType.Income}">
+                                <Setter Property="Foreground"
+                                        Value="ForestGreen" />
+
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
@@ -52,13 +59,24 @@
         <Expander IsExpanded="False"
                   Margin="0,6,0,0">
             <Expander.Header>
-                <DockPanel>
-                    <TextBlock Text="{Binding Name}"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Name}"
                                FontWeight="Bold" />
-                    <TextBlock DockPanel.Dock="Right"
+
+                    <TextBlock Grid.Column="1"
                                Text="{Binding Items, Converter={StaticResource SumAmountConverter}, StringFormat={}{0:C}}"
-                               FontWeight="SemiBold" />
-                </DockPanel>
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Right"
+                               Margin="10,6,10,6"
+                               VerticalAlignment="Center"
+                               TextAlignment="Right" />
+                </Grid>
             </Expander.Header>
         </Expander>
     </ControlTemplate>
@@ -101,27 +119,44 @@
     <GroupStyle x:Key="CategoryGroupStyle">
         <GroupStyle.ContainerStyle>
             <Style TargetType="{x:Type GroupItem}">
+
                 <!-- Standard: Expander + Header -->
+                <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                            <Expander IsExpanded="True">
+                            <Expander IsExpanded="True"
+                                      Margin="0,6,0,0"
+                                      HorizontalAlignment="Stretch"
+                                      >
                                 <Expander.Header>
-                                    <Grid Margin="6,2">
-                                        <Grid.ColumnDefinitions>
+                                    <DockPanel 
+                                          
+                                          LastChildFill="True"
+                                          Background="AliceBlue"
+                                        Margin="10,4,10,4"
+                                          >
+                                        <!--<DockPanel.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <!-- Gruppenname -->
-                                        <TextBlock Text="{Binding Name}"
-                                                   VerticalAlignment="Center" />
+                                        </DockPanel.ColumnDefinitions>-->
+                                        
                                         <!-- Summe rechts -->
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{Binding Converter={StaticResource SumAmountConverter}, StringFormat={}{0:C}}"
+                                        <TextBlock DockPanel.Dock="Right"
+                                                   Text="{Binding Items,  Converter={StaticResource SumAmountConverter}, StringFormat={}{0:C}}"
                                                    HorizontalAlignment="Right"
                                                    TextAlignment="Right"
-                                                   VerticalAlignment="Center" />
-                                    </Grid>
+                                                   VerticalAlignment="Center"
+                                                   FontSize="18"
+                                                   Margin="12,0,0,0"
+                                                    />
+                                        <!-- Gruppenname -->
+                                        <TextBlock 
+                                                   Text="{Binding Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="18" />
+                                    </DockPanel>
                                 </Expander.Header>
                                 <ItemsPresenter />
                             </Expander>

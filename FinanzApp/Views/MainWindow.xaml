@@ -308,6 +308,8 @@
                            Text="{Binding IncomeSum, StringFormat='{}{0:C}'}"
                            Margin="15"
                            FontSize="20"
+                           Foreground="ForestGreen"
+                          
                            HorizontalAlignment="Right"
                            TextAlignment="Right"
                            FontWeight="Bold" />
@@ -326,6 +328,7 @@
                            Text="{Binding ExpenseSum, StringFormat='{}{0:C}',Converter={StaticResource NegateAmountConverter}}"
                            Margin="15"
                            FontSize="20"
+                           Foreground="IndianRed"
                            HorizontalAlignment="Right"
                            TextAlignment="Right"
                            FontWeight="Bold" />

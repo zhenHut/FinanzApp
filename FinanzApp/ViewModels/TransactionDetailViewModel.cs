@@ -36,7 +36,10 @@ namespace FinanzApp.ViewModels
         private string _newCategoryName = string.Empty;
 
         // Befüllung der Combo-Box
-        public Array TransactionTypeList => Enum.GetValues(typeof(TransactionType));
+        //public Array TransactionTypeList => Enum.GetValues(typeof(TransactionType));
+        public IReadOnlyList<TransactionType> TransactionTypeList { get; } =
+        Enum.GetValues<TransactionType>().Where(t => t != TransactionType.None).ToList();
+
         #endregion
 
         #region Events
@@ -62,7 +65,7 @@ namespace FinanzApp.ViewModels
                 if (existing is null)
                 {
                     // neu anlegen
-                    var created = await _categoryService.AddSync(new Category { Name = name });
+                    var created = await _categoryService.AddSync(new Category { Name = name, AppliesTo = Transaction.TransactionType });
                     Categories.Add(created);
                     Transaction.CategoryId = created.Id;   // FK setzen
                 }
@@ -79,7 +82,7 @@ namespace FinanzApp.ViewModels
             // Dialog schließen
             CloseRequested?.Invoke(this, new DialogCloseRequestedEventArgs(true));
         }
-        
+
 
         [RelayCommand]
         private void Cancel()

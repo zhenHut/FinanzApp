@@ -15,8 +15,7 @@ namespace FinanzApp.Security
         #endregion
 
         #region Methods
-        public static bool TryLoad(out string password)
-        {
+        public static bool TryLoad(out string password)        {
             password = "";
             if (!File.Exists(FilePath))
                 return false;
@@ -33,12 +32,12 @@ namespace FinanzApp.Security
             var plain = Encoding.UTF8.GetBytes(password);
             var protectedBytes = ProtectedData.Protect(plain, null, DataProtectionScope.CurrentUser);
             File.WriteAllBytes(FilePath,protectedBytes);
-
         }
 
         public static void EnsureDbPassword()
         {
-            if (TryLoad(out _)) return;
+            if (TryLoad(out _)) 
+                return;
 
             // TODO: Ersetze das durch einen eigenen WPF-Dialog mit PasswordBox
             var input = Microsoft.VisualBasic.Interaction.InputBox(

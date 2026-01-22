@@ -52,17 +52,18 @@
             <TextBlock FontSize="16"
                        Text="Date" />
             <DatePicker Text="{Binding Transaction.Date, UpdateSourceTrigger=PropertyChanged}"
-                     HorizontalAlignment="Left"
-                     Height="30"
-                     Width="250"
-                     Margin="0 5 0 15"
-                     FontSize="16" />
+                        HorizontalAlignment="Left"
+                        Height="30"
+                        Width="250"
+                        Margin="0 5 0 15"
+                        FontSize="16" />
 
             <!--Category-->
             <TextBlock FontSize="16"
                        Text="Category" />
+            
             <ComboBox Text="{Binding NewCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                ItemsSource="{Binding Categories}"
+                      ItemsSource="{Binding Categories}"
                       SelectedValue="{Binding Transaction.CategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectedValuePath="Id"
                       DisplayMemberPath="Name"
@@ -91,8 +92,7 @@
                          Height="30"
                          Width="250"
                          Margin="0 5 0 15"
-                         FontSize="16"
-                          />
+                         FontSize="16" />
 
                 <!--Amount-Type-->
                 <TextBlock FontSize="16"
@@ -113,8 +113,7 @@
                          Height="30"
                          Width="250"
                          Margin="0 5 0 15"
-                         FontSize="16"
-                         />
+                         FontSize="16" />
             </StackPanel>
 
             <StackPanel Grid.Row="1"

@@ -31,7 +31,7 @@ namespace FinanzApp.ViewModels
             var cvsExpense = new CollectionViewSource { Source = Expenses };
             ExpensesView = cvsExpense.View;
             cvsExpense.GroupDescriptions.Add(new PropertyGroupDescription("Category.Name", new NullToLabelConverter()));
-
+            
 
             _ = RefreshTransactionsAsync();
 
@@ -64,8 +64,6 @@ namespace FinanzApp.ViewModels
 
         public decimal IncomeSum => Incomes.Sum(t => t.Amount);
         public decimal ExpenseSum => Expenses.Sum(t => t.Amount);
-
-
         public decimal BilanceSum => IncomeSum - ExpenseSum;
 
         #endregion
