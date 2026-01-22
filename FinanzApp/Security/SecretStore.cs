@@ -15,7 +15,8 @@ namespace FinanzApp.Security
         #endregion
 
         #region Methods
-        public static bool TryLoad(out string password)        {
+        public static bool TryLoad(out string password)  
+        {
             password = "";
             if (!File.Exists(FilePath))
                 return false;
