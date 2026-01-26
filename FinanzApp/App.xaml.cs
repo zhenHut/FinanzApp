@@ -25,14 +25,12 @@ namespace FinanzApp
     /// </summary>
     public partial class App : Application
     {
-
         public static IServiceProvider Services { get; private set; } = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             SQLitePCL.Batteries_V2.Init();
-
 
             var appResources = new ResourceDictionary
             {
@@ -47,7 +45,6 @@ namespace FinanzApp
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
-
 
             SecretStore.EnsureDbPassword();
 
@@ -73,7 +70,6 @@ namespace FinanzApp
             var dbPath = Path.Combine(dbDir, dbFileName);
             var cs = $"Data Source={dbPath}; Password={pw}";
 
-
             var services = new ServiceCollection();
             services.AddDbContext<FinanzAppDbContext>(options
                 => options.UseSqlite(cs, builder => builder.MigrationsAssembly(typeof(FinanzAppDbContext).Assembly.GetName().Name)));
@@ -87,7 +83,6 @@ namespace FinanzApp
             {
                 DataContext = sp.GetRequiredService<MainViewModel>()
             });
-
 
             Services = services.BuildServiceProvider();
 
