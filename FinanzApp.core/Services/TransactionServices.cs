@@ -46,9 +46,25 @@ namespace FinanzApp.core.Services
             return await _dbcontext.Transactions.FindAsync(id);
         }
 
-        public async Task UpdateAsync(Transaction transaction)
+        public async Task UpdateAsync(Transaction updatedTransaction)
         {
-            _dbcontext.Transactions.Update(transaction);
+            var trackedTransaction = _dbcontext.Transactions.Local.FirstOrDefault(t => t.Id == updatedTransaction.Id) ?? 
+                await _dbcontext.Transactions.FirstOrDefaultAsync(t => t.Id == updatedTransaction.Id);
+
+            if (trackedTransaction is null)
+                throw new InvalidOperationException($"Transaktion {updatedTransaction.Id} wurde nicht gefunden.");
+
+            if (!ReferenceEquals(trackedTransaction, updatedTransaction))
+            {
+                trackedTransaction.Name = updatedTransaction.Name; 
+                trackedTransaction.Description = updatedTransaction.Description;
+                trackedTransaction.Date = updatedTransaction.Date;
+                trackedTransaction.Amount = updatedTransaction.Amount;
+                trackedTransaction.BudgetAmount = updatedTransaction.BudgetAmount;
+                trackedTransaction.TransactionType = updatedTransaction.TransactionType;
+                trackedTransaction.CategoryId= updatedTransaction.CategoryId;
+            }
+
             await _dbcontext.SaveChangesAsync();
         }
 
